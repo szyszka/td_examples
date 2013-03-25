@@ -1,0 +1,24 @@
+# author:      Anna Jaruga <ajaruga@igf.fuw.edu.pl>
+# copyright:   University of Warsaw
+# licence:     GPLv3+ (see the COPYING file or http://www.gnu.org/licenses/)
+
+# description: plots temperature, virtual temperature and mixing ratio profiles
+#               (based on the soundings from http://weather.uwyo.edu/upperair/sounding.html)
+
+set term svg
+set output 'wykres.svg'
+
+set encoding utf8 #iso_8859_2
+
+set title 'Praca domowa nr 3'
+set xlabel 'Temperatura [K]'
+set ylabel 'Wysokość [m]'
+set x2label 'Współczynnik mieszania [g/kg] '
+set xtics  nomirror
+set x2tics
+set yrange [0:12000]
+set xrange [220:310]
+
+plot 'pagopago_2013032500Z' using ($3)+273:2 title 'Temperatura',\
+'pagopago_2013032500Z' using (($3)+273)*(1+.61*($6)/1000):($2) title 'Temperatura wirtualna',\
+'pagopago_2013032500Z' using 6:2 axes x2y1 title 'Wsp. mieszania'
