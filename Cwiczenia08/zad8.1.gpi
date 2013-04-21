@@ -1,0 +1,24 @@
+# author: Sylwester Arabas <slayoo@igf.fuw.edu.pl>
+# copyright: University of Warsaw
+# licence: GPLv3+ (see the COPYING file or http://www.gnu.org/licenses/)
+
+R_d = 8.31432 / 0.02896                        #
+R_v = 8.31432 / 0.01802                        # 
+rho_v(p, T, r_v) = p / T / (R_d / r_v + R_v)   # kg/m3
+rho_H2O = 1000                                 # kg/m3
+
+p0 = 1
+p1 = 1./10000
+funkcja(z) = p0 * exp(-p1 * z)
+fit funkcja(x) 'dane' using 2 : (rho_v($1 * 100, $3 + 273.15, $6 / 1000)) via p0, p1
+
+print "woda opadowa: ok. ", int(p0 / p1 * 1000 / rho_H2O), " mm"
+
+set term svg
+set output "wykres.svg"
+set encoding iso_8859_2
+set xlabel "wysoko¶æ [m]"
+set ylabel "wilgotno¶æ bezwzglêdna [kg/m^3]"
+plot \
+  funkcja(x) with filledcurve below x1 lt 3 t 'dopasowanie', \
+  'dane' using 2 : (rho_v($1 * 100, $3 + 273.15, $6 / 1000)) with linespoints lw 4 title "sonda¿" 
